@@ -1,10 +1,12 @@
 package com.aplazo.technictest.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 
 import javax.validation.constraints.*;
 
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Entity
 @Table(name = "Requests")
 public class Request {

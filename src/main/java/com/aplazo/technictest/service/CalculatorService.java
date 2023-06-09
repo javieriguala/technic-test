@@ -25,16 +25,20 @@ public class CalculatorService {
         requestRepository.save(request);
 
         ArrayList<Response> responseArrayList = new ArrayList<>();
-        Double capitalEarned = request.getAmount() * (request.getRate()/100);
-        Double amount = (request.getAmount()/request.getTerms()) + capitalEarned;
-        Date payment_date = new Date();
 
-        for (int i = 1; i <= request.getTerms(); i++){
-            payment_date = addDays(payment_date, 7);
-            Response response = new Response(i, amount, payment_date);
-            responseArrayList.add(response);
-            responseRepository.save(response);
+        if(validateResquest(request)) {
+            Double capitalEarned = request.getAmount() * (request.getRate()/100);
+            Double amount = (request.getAmount()/request.getTerms()) + capitalEarned;
+            Date payment_date = new Date();
+
+            for (int i = 1; i <= request.getTerms(); i++){
+                payment_date = addDays(payment_date, 7);
+                Response response = new Response(i, amount, payment_date);
+                responseArrayList.add(response);
+                responseRepository.save(response);
+            }
         }
+
         return responseArrayList;
 
     }
@@ -44,5 +48,15 @@ public class CalculatorService {
         calendar.setTime(date);
         calendar.add(Calendar.DAY_OF_YEAR, days);
         return calendar.getTime();
+    }
+
+    public Boolean validateResquest(Request request) {
+
+        if (request.getTerms()>=4 && request.getTerms() <=52)
+            if(request.getRate() >=1 && request.getRate()<=10)
+                if(request.getAmount() >=1 && request.getAmount() <= 999999)
+                    return true;
+
+        return false;
     }
 }
